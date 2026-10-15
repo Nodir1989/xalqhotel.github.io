@@ -21,3 +21,49 @@ index.html
     <p>Bu mening GitHub Pages'da yaratilgan ilk vebsaytim.</p>
 </body>
 </html>
+alert('Xona muvaffaqiyatli band qilindi!');
+            closeBookingModal();
+            document.getElementById('booking-form').reset();
+            loadBookings();
+        }
+
+        function loadBookings() {
+            let bookings = JSON.parse(localStorage.getItem('go_uzbekistan_bookings') || '[]');
+            const container = document.getElementById('bookings-list');
+
+            if (bookings.length === 0) {
+                container.innerHTML = <p class="text-gray-500 text-sm">Hozircha faol bronlar mavjud emas. Yuqoridagi mehmonxonalardan birini tanlab band qilishingiz mumkin.</p>;
+                return;
+            }
+
+            container.innerHTML = bookings.map(b => 
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-50 p-4 rounded-xl border border-gray-200 gap-4">
+                    <div>
+                        <h4 class="font-bold text-blue-600 text-lg">${b.hotel}</h4>
+                        <p class="text-sm text-gray-600">👤 Mehmon: <strong>${b.name}</strong> (${b.phone})</p>
+                        <p class="text-sm text-gray-500">📅 Sana: ${b.checkIn} dan ${b.checkOut} gacha</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">Band qilindi</span>
+                        <button onclick="cancelBooking(${b.id})" class="text-red-500 hover:text-red-700 text-sm font-medium">Bekor qilish</button>
+                    </div>
+                </div>
+            ).join('');
+        }
+
+        function cancelBooking(id) {
+            let bookings = JSON.parse(localStorage.getItem('go_uzbekistan_bookings') || '[]');
+            bookings = bookings.filter(b => b.id !== id);
+            localStorage.setItem('go_uzbekistan_bookings', JSON.stringify(bookings));
+            loadBookings();
+        }
+
+        function filterHotels() {
+            const city = document.getElementById('search-city').value;
+            alert(city ? "${city}" shahridagi joylar filtrlandi. : 'Barcha joylar ko\'rsatilmoqda.');
+        }
+
+        window.onload = loadBookings;
+    </script>
+</body>
+</html>
